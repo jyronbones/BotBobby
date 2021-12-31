@@ -1,19 +1,27 @@
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
 
+/**
+ * This class contains the methods to scrape 30x series GPUs from Canada Computers website and relay to discord
+ */
 public class CanadaComputers {
+    /**
+     * This method scrapes Canada Computers 30x series graphics cards from website and displays via an embedded text
+     * @param event is the passed event as a command
+     * @throws IOException is the exception class that is thrown if IO error
+     */
+    public void canadaComputersScrape(GuildMessageReceivedEvent event) throws IOException {
 
-    public void canadaComputers() throws IOException {
-
-        int pageCount = 1;
-        while(pageCount <= 2) //6 pages
+        int pageCount = 3;
+        while(pageCount <= 3) //6 pages
         {
-            //30x url: https://www.canadacomputers.com/index.php?cPath=43&sf=:3_3,3_5,3_7,3_8,3_9&mfr=&pr=&ajax=false&page=
-            String ccUrl = "https://www.canadacomputers.com/index.php?cPath=43&sf=:3_27,3_41&mfr=&pr="
+
+            String ccUrl = "https://www.canadacomputers.com/index.php?ajax=false&cPath=43&sf=:3_3,3_4,3_5,3_6,3_7,3_8,3_9&mfr=&pr="
                     + pageCount;
 
             pageCount++;
@@ -21,7 +29,7 @@ public class CanadaComputers {
             Document doc = Jsoup.connect(ccUrl).timeout(6000).get();
 
             Elements body = doc.select("#product-list");
-            for(Element t: body.select(".col-xl-3"))
+            for(Element t: body.select(".col-xl-3")) // loops through the element which holds the products on the page
             {
                 Elements title = t.select(".productTemplate_title");
                 String image = t.select(".pq-img-manu_logo").attr("src");
@@ -30,18 +38,23 @@ public class CanadaComputers {
                 String link = t.select("a").attr("href");
 
 
-                if(inStock.text().equals("Add to Cart"))
+                if(inStock.text().equals("Add to Cart")) // if item available for purchase
                 {
-                    System.out.println("\n" + title.text());
-                    System.out.println(image);
-                    System.out.println(price.text());
-                    System.out.println(link);
-                    System.out.println(inStock.text().replace("Add to Cart", "In Stock"));
 
+                    EmbedBuilder info = new EmbedBuilder();
+                    info.setTitle(title.text());
+                    info.setDescription("⬇Canada Computers⬇");
+                    info.setImage(image);
+                    info.addField("Price", price.text().replace("+", ""), false);
+                    info.addField("Website", link, false);
+                    info.addField("Availability","In Stock", false);
+                    info.setThumbnail("https://d2t1xqejof9utc.cloudfront.net/screenshots/pics/2a34a345be3bf4b30229de096bd0b06e/large.jpg");
+
+                    event.getChannel().sendTyping().queue();
+                    event.getChannel().sendMessage(info.build()).queue();
 
                 }
             }
         }
-
     }
 }
