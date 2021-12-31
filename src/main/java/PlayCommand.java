@@ -69,7 +69,7 @@
 //
 //    @Nullable
 //    private String searchYoutube(TextChannel channel, String input) {
-//        String youtubeKey = "AIzaSyDoQ4OInMTYth7hdlWwQSIaHuxpxxv7eJs";
+//        String youtubeKey = TOKEN;
 //
 //        try {
 //            List<SearchResult> results = youTube.search()
