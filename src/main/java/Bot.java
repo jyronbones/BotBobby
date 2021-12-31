@@ -32,9 +32,6 @@ public class Bot implements EventListener{
 	 * This method runs on event
 	 * @param event is the generic event passed to the method
 	 */
-	public void onEvent(GenericEvent event) {
-		
+	public void onEvent(GenericEvent event) {	
 	}
-	
-
 }
