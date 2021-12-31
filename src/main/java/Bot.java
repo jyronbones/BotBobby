@@ -25,9 +25,7 @@ public class Bot implements EventListener{
 		JDA api = JDABuilder.createDefault(Token.TOKEN).addEventListeners(new Bot()).build();
 		api.getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
 
-	
 		api.addEventListener(new Commands());
-
 	}
 
 	/**
