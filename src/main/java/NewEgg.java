@@ -1,19 +1,25 @@
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
-
+/**
+ * This class contains the methods to scrape 30x series GPUs from NewEgg website and relay to discord
+ */
 public class NewEgg {
-
-    public void newEgg() throws IOException {
+    /**
+     * This method scrapes NewEgg 30x series graphics cards from website and displays via an embedded text
+     * @param event is the passed event as a command
+     * @throws IOException is the exception class that is thrown if IO error
+     */
+    public void newEggScrape(GuildMessageReceivedEvent event) throws IOException {
    
         int pageCount = 1;
-        while(pageCount <= 1) //38 pages
+        while(pageCount <= 6)
         {
-            //30x series url: https://www.newegg.ca/p/pl?N=100007708%20601357282
-            String newEggUrl = "https://www.newegg.ca/Desktop-Graphics-Cards/SubCategory/ID-48/Page-" + pageCount;
+            String newEggUrl = "https://www.newegg.ca/p/pl?N=100007708%20601357282&page=" + pageCount;
 
             pageCount++;
 
@@ -21,7 +27,7 @@ public class NewEgg {
 
             Elements body = doc.select(".item-cell");
 
-            for(Element t: body.select(".item-container"))
+            for(Element t: body.select(".item-container")) // loops through the element which holds the products on the page
             {
                 Elements title = t.select(".item-title");
                 String image = t.select(".item-container img").attr("src");
@@ -30,17 +36,21 @@ public class NewEgg {
                 String link = t.select("a").attr("href");
 
 
-                if(inStock.text().equals("Add to cart"))
+                if(inStock.text().equals("Add to cart")) // if item available for purchase
                 {
-                    System.out.println("\n" + title.text());
-                    System.out.println(image);
-                    System.out.println(price.text());
-                    System.out.println(link);
-                    System.out.println(inStock.text().replace("Add to cart", "In Stock"));
+                    EmbedBuilder info = new EmbedBuilder();
+                    info.setTitle(title.text());
+                    info.setDescription("⬇New Egg⬇");
+                    info.setImage(image);
+                    info.addField("Price", price.text().replace("+", ""), false);
+                    info.addField("Website", link, false);
+                    info.addField("Availability","In Stock", false);
+                    info.setThumbnail("https://d2t1xqejof9utc.cloudfront.net/screenshots/pics/2a34a345be3bf4b30229de096bd0b06e/large.jpg");
 
+                    event.getChannel().sendTyping().queue();
+                    event.getChannel().sendMessage(info.build()).queue();
                 }
             }
         }
-
     }
 }
