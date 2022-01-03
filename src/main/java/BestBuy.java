@@ -19,9 +19,9 @@ public class BestBuy {
     public void bestBuyScrape(GuildMessageReceivedEvent event) throws IOException {
 
 
-        String meUrl = "https://www.bestbuy.ca/en-ca/category/graphics-cards/20397?path=category%253AComputers%2B%2526%2BTablets%253Bcategory%253APC%2BComponents%253Bcategory%253AGraphics%2BCards%253Bcustom0graphicscardmodel%253AGeForce%2BRTX%2B3090%257CGeForce%2BRTX%2B3080%257CGeForce%2BRTX%2B3070%257CGeForce%2BRTX%2B3060%2BTi%257CGeForce%2BRTX%2B3060";
+        String bbUrl = "https://www.bestbuy.ca/en-ca/category/graphics-cards/20397?path=category%253AComputers%2B%2526%2BTablets%253Bcategory%253APC%2BComponents%253Bcategory%253AGraphics%2BCards%253Bcustom0graphicscardmodel%253AGeForce%2BRTX%2B3090%257CGeForce%2BRTX%2B3080%257CGeForce%2BRTX%2B3070%257CGeForce%2BRTX%2B3060%2BTi%257CGeForce%2BRTX%2B3060";
 
-        Document doc = Jsoup.connect(meUrl).timeout(6000).get();
+        Document doc = Jsoup.connect(bbUrl).timeout(6000).get();
 
         Elements body = doc.select(".productListingContainer_3JUbO");
 
