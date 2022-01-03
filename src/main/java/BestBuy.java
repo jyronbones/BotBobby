@@ -45,11 +45,6 @@ public class BestBuy {
 
                 event.getChannel().sendTyping().queue();
                 event.getChannel().sendMessage(info.build()).queue();
-
-                System.out.println("\n" + title.text());
-                System.out.println(price.text().replace("+", ""));
-                System.out.println("https://www.bestbuy.ca" + link);
-                System.out.println("In Stock");
             }
         }
     }
